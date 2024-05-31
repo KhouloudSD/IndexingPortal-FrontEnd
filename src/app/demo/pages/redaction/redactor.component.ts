@@ -1,13 +1,16 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef , NgZone} from '@angular/core';
-import * as PDFJS from 'src/app/redactor/pdf.js';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef , NgZone, OnInit} from '@angular/core';
+import * as PDFJS from 'src/app/demo/pages/redaction/pdf.js';
+
 import {jsPDF} from 'jspdf';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-redactor',
   templateUrl: './redactor.component.html',
   styleUrls: ['./redactor.component.css']
 })
-export class RedactorComponent implements AfterViewInit{
+export class RedactorComponent implements AfterViewInit , OnInit{
 
   @ViewChild('myCanvas') __CANVAS!: ElementRef;
   public __CANVAS_CTX!: CanvasRenderingContext2D ;
@@ -51,7 +54,79 @@ export class RedactorComponent implements AfterViewInit{
     }
   };
 
-  constructor(public ngZone: NgZone) {
+
+  ngOnInit(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Refresh the page when navigation ends
+        window.location.reload();
+      });
+  }
+  
+  ngAfterViewInit(): void {
+    this.show = false;
+    this.__CANVAS_CTX = (<HTMLCanvasElement>this.__CANVAS.nativeElement).getContext('2d')!;
+    this.rectT = this.rect();
+  
+    const that = this;
+    this.ngZone.runOutsideAngular(() => {
+      requestAnimationFrame(mainLoop);
+      function mainLoop() {
+        that.refresh = true;
+        if (that.refresh || that.mouse.down || that.mouse.up || that.mouse.button) {
+          that.refresh = false;
+          if (that.mouse.down) {
+            that.mouse.down = false;
+            that.rectT.restart(that.mouse);
+          } else if (that.mouse.button) {
+            that.rectT.update(that.mouse);
+          } else if (that.mouse.up) {
+            that.mouse.up = false;
+            that.rectT.update(that.mouse);
+            const tempRect = that.rectT.toRect();
+            const m = that.mouse;
+            if (isFinite(tempRect.x) && isFinite(tempRect.y) && isFinite(tempRect.w) && isFinite(tempRect.h)
+              && tempRect.w !== 0 && tempRect.h !== 0 // only if the mouse lands in the canvas, ok
+              && m.x > 0 && m.x < that.__CANVAS_CTX.canvas.width && m.y > 0 && m.y < that.__CANVAS_CTX.canvas.height) {
+              that.__CANVAS_CTX.fillStyle = that.fillColor;
+              tempRect.draw(that.__CANVAS_CTX);
+              that.storedRects.push(tempRect);
+              that.buff = []; // once the editor starts to edit, the editor commits to the change so far, so redo is emptied out
+              const canv = document.createElement('canvas');
+              const canv_con = canv.getContext('2d')!;
+              canv.width = that.__CANVAS_CTX.canvas.width;
+              canv.height = that.__CANVAS_CTX.canvas.height;
+              canv_con.drawImage(that.__CANVAS.nativeElement, 0, 0, that.__CANVAS_CTX.canvas.width, that.__CANVAS_CTX.canvas.height);
+              that.allPages[that.__CURRENT_PAGE - 1] = canv;
+            }
+          }
+          that.draw();
+        }
+        requestAnimationFrame(mainLoop);
+      }
+    });
+  }
+
+  constructor(public ngZone: NgZone, private router:Router) {
+
+  }
+  
+  
+  // Other methods remain unchanged
+  
+
+/*
+  ngOnInit(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Refresh the page when navigation ends
+        window.location.reload();
+      });
+  }
+  
+  constructor(public ngZone: NgZone, private router:Router) {
     const that = this;
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(mainLoop);
@@ -90,47 +165,8 @@ export class RedactorComponent implements AfterViewInit{
       }
     });
   }
+*/
 
-  /*rect1(): object {
-    let x1 : any, y1 : any, x2  : any, y2 : any;
-    let show = false;
-    const rectT = {x: 0, y: 0, w: 0, h: 0, draw};
-    function fix() {
-      rectT.x = Math.min(x1, x2);
-      rectT.y = Math.min(y1, y2);
-      rectT.w = Math.max(x1, x2) - Math.min(x1, x2);
-      rectT.h = Math.max(y1, y2) - Math.min(y1, y2);
-    }
-
-    function draw(ctx) {
-      ctx.fillRect(this.x, this.y, this.w, this.h);
-    }
-    const API = {
-      restart(point : any ) {
-        x2 = x1 = point.x;
-        y2 = y1 = point.y;
-        fix();
-        show = true;
-      },
-      update(point: any) {
-        x2 = point.x;
-        y2 = point.y;
-        fix();
-        show = true;
-      },
-      toRect() {
-        show = false;
-        return Object.assign({}, rectT);
-      },
-      draw(ctx) {
-        if (show) {
-          rectT.draw(ctx);
-        }
-      },
-      show: false,
-    };
-    return API;
-  }*/
   rect(): object {
     let x1: number, y1: number, x2: number, y2: number;
     let show = false;
@@ -175,12 +211,12 @@ export class RedactorComponent implements AfterViewInit{
     return API;
 }
 
-
+/*
   ngAfterViewInit(): void {
     this.show = false;
     this.__CANVAS_CTX = (<HTMLCanvasElement>this.__CANVAS.nativeElement).getContext('2d')!;
     this.rectT = this.rect();
-  }
+  } */
 
   // Upon click this should should trigger click on the #file-to-upload file input element
   // This is better than showing the not-good-looking file input element
@@ -193,6 +229,7 @@ export class RedactorComponent implements AfterViewInit{
   // Previous action on the PDF
   undoAction(): void {
     if (this.storedRects.length > 0) {
+      console.log(this.storedRects.length)
       this.buff.push(this.storedRects.pop());
     }
   }
@@ -200,6 +237,8 @@ export class RedactorComponent implements AfterViewInit{
   // Next action on the PDF
   redoAction(): void {
     if (this.buff.length > 0) {
+            console.log(this.storedRects.length)
+
       this.storedRects.push(this.buff.pop());
     }
   }

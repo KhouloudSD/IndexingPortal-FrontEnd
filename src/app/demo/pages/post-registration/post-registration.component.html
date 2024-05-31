@@ -30,17 +30,17 @@
                 <ng-template pTemplate>
                     <div class="col">
 
-                        <div class="post-details">
-                            <h5>{{ selectedPost?.emailSubject }}</h5>
-                            <div *ngIf="selectedPost">
+                        <div class="post-details" *ngIf="selectPost">
+                            <div *ngIf="selectedPost  && postDetails" >
+                                <h5>{{ selectedPost.emailSubject }}</h5>
                                 <div class="email-header">
                                     <div class="email-info">
-                                        <div class="email-field"><strong>Date:</strong> {{ postDetails?.postDate | date:'dd/MM/yyyy hh:mm a' }}</div>
+                                        <div class="email-field"><strong>Date:</strong> {{ postDetails.postDate | date:'dd/MM/yyyy hh:mm a' }}</div>
                                     </div>
                                     <br>
                                     <div class="status-badge">
                                         <span *ngIf="postDetails.Status">
-                                          <span [class]="'product-badge status-' + (postDetails?.Status ? postDetails.Status.toLowerCase() : '')">
+                                          <span [class]="'product-badge status-' + (postDetails.Status ? postDetails.Status.toLowerCase() : '')">
                                             {{ postDetails.Status }}
                                           </span>
                                         </span>
@@ -56,14 +56,14 @@
                                                   <button pButton pRipple type="button" label="Link" icon="pi pi-check" (click)="checkDossierNumber()" pTooltip="Click to check dossier number"></button>
                                             </div>
                                             <br>
-                                    <div><strong>From:</strong> {{ postDetails?.emailFrom }}</div>
-                                    <div><strong>To:</strong> {{ postDetails?.emailTo }}</div>
-                                    <div><strong>Cc:</strong> {{ postDetails?.emailCc }}</div>
-                                    <div><strong>Has Attachments:</strong> {{ postDetails?.hasAttachments }}</div>
-                                    <div><strong>Comments:</strong> {{ postDetails?.comments }}</div>
-                                    <div><strong>Reference:</strong> {{ postDetails?.postReference }}</div>
+                                    <div><strong>From:</strong> {{ postDetails.emailFrom }}</div>
+                                    <div><strong>To:</strong> {{ postDetails.emailTo }}</div>
+                                    <div><strong>Cc:</strong> {{ postDetails.emailCc }}</div>
+                                    <div><strong>Has Attachments:</strong> {{ postDetails.hasAttachments }}</div>
+                                    <div><strong>Comments:</strong> {{ postDetails.comments }}</div>
+                                    <div><strong>Reference:</strong> {{ postDetails.postReference }}</div>
                                     <div><strong>Attachments:</strong>
-                                        <li *ngFor="let attachment of postDetails?.attachments">
+                                        <li *ngFor="let attachment of postDetails.attachments">
                                             {{ attachment.substring(37) }}
                                             <i *ngIf="verifyEmailName(attachment) || postDetails.id"> 
                                             <p-button icon="pi pi-download" [rounded]="true" [text]="true" [raised]="true" severity="success " (click)="downloadDocument(attachment, postDetails.id)"></p-button>

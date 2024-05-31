@@ -23,7 +23,6 @@ export class DropZoneComponent {
     this.errFlag = false;
   }
   fileUploadSuccess(e: any) {
-    
     // console.log($e);
     this.message = 'Only ONE PDF File is Allowed';
     if (this.errFlag) {

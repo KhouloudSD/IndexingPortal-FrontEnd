@@ -16,7 +16,7 @@
                     </ng-template>
                 </p-toolbar>
             </div>
-            <p-dialog [(visible)]="postDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+            <p-dialog [(visible)]="postDialog" [style]="{width: '450px'}" header="Add New Post" [modal]="true" class="p-fluid">
                 <ng-template pTemplate="content">
                     <div class="field">
                         <label for="emailSubject">Email Subject</label>
@@ -25,10 +25,10 @@
                     </div>
                     
                     <div class="field">
-                        <label for="status">Inventory Status</label>
-                        <p-dropdown [(ngModel)]="post.inventoryStatus" inputId="inventoryStatus" optionValue="value" [options]="statuses" placeholder="Select">
+                        <label for="status">Status</label>
+                        <p-dropdown [(ngModel)]="post.Status" inputId="Status" optionValue="value" [options]="statuses" placeholder="Select">
                             <ng-template pTemplate="selectedItem">
-                                <span *ngIf="post && post.inventoryStatus" [class]="'product-badge status-' + post.inventoryStatus.toLowerCase()">{{post.inventoryStatus}}</span>
+                                <span *ngIf="post && post.Status" [class]="'product-badge status-' + post.Status.toLowerCase()">{{post.Status}}</span>
                             </ng-template>
                             <ng-template let-option pTemplate="item">
                                 <span [class]="'product-badge status-' + option.value">{{option.label}}</span>

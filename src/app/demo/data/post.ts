@@ -12,7 +12,7 @@ export interface Post {
     EmailTo?: string;
     EmailCC?: string;
     Dossier_Id?: number;
-    inventoryStatus?: string;
+    Status?: string;
 }
 
 export interface PostInfoDto {

@@ -28,9 +28,9 @@ import { PostService } from '../services/posts.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
-import { RedactorComponent } from 'src/app/redactor/redactor.component';
-import { DropZoneComponent } from 'src/app/redactor/drop-zone/drop-zone.component';
+import { DropZoneComponent } from 'src/app/demo/pages/redaction/drop-zone/drop-zone.component';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
+import { RedactorComponent } from './redaction/redactor.component';
 
 @NgModule({
   declarations: [

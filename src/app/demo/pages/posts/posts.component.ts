@@ -4,7 +4,7 @@ import { Table } from 'primeng/table';
 import { Post } from '../../data/post';
 import { PostService } from '../../services/posts.service';
 
-interface InventoryStatus {
+interface Status {
   label: string;
   value: string;
 }
@@ -37,13 +37,12 @@ export class PostsComponent  implements OnInit{
             { field: 'EmailSubject', header: 'EmailSubject' },
             { field: 'Dossier_Id', header: 'Dossier_Id' },
             { field: 'HasAttachments', header: 'HasAttachments' },
-            { field: 'inventoryStatus', header: 'Status' }
+            { field: 'Status', header: 'Status' }
         ];
 
         this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
+            { label: 'NEW', value: 'new' },
+            { label: 'CLOSED', value: 'closed' },
         ];
     }
 
@@ -73,3 +72,39 @@ export class PostsComponent  implements OnInit{
 
 
 
+/*
+
+ [POST_Id]
+      ,[POST_TimeStamp]
+      ,[POST_PostNumber]   this 
+      ,[POST_PostDate]    this 
+      ,[POST_PostReference]   this
+      ,[POST_EmailFrom]   this 
+      ,[POST_EmailTo]   this 
+      ,[POST_EmailCC]    this
+      ,[POST_EmailSubject]   this 
+      ,[POST_EmailMessage]  this
+      ,[POST_SendDate]   this
+      ,[POST_ReceiveDate]  this
+      ,[POST_Comments]
+      ,[POST_CommunicationType_Id]
+      ,[POST_PostHandlingPriority_Id]
+      ,[POST_IndexingDate]
+      ,[POST_IndexingArchive_Id]
+      ,[POST_LegalEntity_Id]
+      ,[POST_Department_Id]
+      ,[POST_Employee_Id]
+      ,[POST_Dossier_Id]   this 
+      ,[POST_DossierAssignment_Id]
+      ,[POST_DossierParty_Id]
+      ,[POST_OriginalDocument_Id]
+      ,[POST_IsBodilyInjury]
+      ,[POST_CreatedDate]
+      ,[POST_CreatedBy]
+      ,[POST_LastModifiedDate]
+      ,[POST_LastModifiedBy]
+      ,[POST_Inactive]
+      ,[POST_HasAttachments]  this 
+
+
+*/

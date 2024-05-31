@@ -5,8 +5,8 @@ import { PostRegistrationComponent } from './post-registration/post-registration
 import { LoginComponent } from './login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { PostsComponent } from './posts/posts.component';
-import { DropZoneComponent } from 'src/app/redactor/drop-zone/drop-zone.component';
-import { RedactorComponent } from 'src/app/redactor/redactor.component';
+import { DropZoneComponent } from 'src/app/demo/pages/redaction/drop-zone/drop-zone.component';
+import { RedactorComponent } from './redaction/redactor.component';
 
 
 export const PagesLayoutRoutes: Routes = [

@@ -19,33 +19,29 @@ export class PostRegistrationComponent implements OnInit {
   @ViewChild('splitter') splitter!: Splitter;
   @ViewChild('scroller') scroller!: ElementRef;
   dossierNumber: string = '';
-
   scrollerHeight: string = '510px'; // Define scrollerHeight property
-
   postInfoList: PostInfoDto[] = [];
-
-  sharepointfilename : string ='ce19d68d-da60-4034-90f2-68f7444025f8__maladies.pdf'
-
   keyword: string = '';
   filteredPostInfoList: PostInfoDto[] = [];
-  selectedPost: PostInfoDto | undefined;
+  selectedPost : PostInfoDto | undefined ;
   postDetails !: PostDto ;
   body: SafeHtml = '';
   textcontent : any;
   visible: boolean = false;
-
-
   msgs: Message[] = [];
-  decoded : string = "" ;
-  encoded = "" ;
+  emailSubject: string = '';
+
 
 
   constructor( private messageService : MessageService, private sanitizer: DomSanitizer,private renderer: Renderer2 , private postService: PostService ) {}
 
   ngOnInit(): void {
     this.getAllPostInfo();
-    this.onResize({panel: this.splitter.panels[0]}); // Initially set scroller dimensions
-  }
+    if (this.splitter && this.splitter.panels && this.splitter.panels.length > 0){
+      this.onResize({panel: this.splitter.panels[0]});
+    }
+}
+
 
 
   clearSearch(): void {
@@ -75,27 +71,6 @@ export class PostRegistrationComponent implements OnInit {
       .replace(/(?:\r\n|\r|\n)/g, '<br>'); // Replace newline characters with <br> tags
     return formattedTextContent;
   }
-  
-
- /* getPostDetails1(postId: string): void {
-    this.postService.getPostDetails(postId)
-      .subscribe(
-        (data: PostDto) => {
-          this.postDetails = data;
-          this.postDetails.attachments = this.getPostAttachmentsName(postId);
-          if (this.selectedPost) {
-          } else {
-            this.body = '';
-          }
-        },
-        (error: HttpErrorResponse) => {
-          console.error('Failed to fetch post details:', error.message);
-        }
-      );
-  }
-
-*/
-
 
 getPostDetails(postId: string): void {
   this.postService.getPostDetails(postId).subscribe(
@@ -124,16 +99,6 @@ getPostDetails(postId: string): void {
   );
 }
 
-  extractAttachmentName(name: string): string {
-    const index = name.indexOf("__");
-    if (index !== -1) {
-      return name.substring(index + 2);
-    } else {
-      return name;
-    }
-  }
-
-
   verifyEmailName (name: string): boolean{
     const index = name.indexOf(".eml");
     if (index !== -1){
@@ -142,7 +107,6 @@ getPostDetails(postId: string): void {
     else { return false;}
   }
   
-
   getPostAttachmentsName(postId: string): void {
     this.postService.GetPostAttachmentsNamesByPostId(postId)
       .subscribe(
@@ -155,31 +119,8 @@ getPostDetails(postId: string): void {
         }
       );
   }
-   blobToBase64(b : Blob )  {
-    return new Promise((resolve, _) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(b);
-    });
-  }
 
-  downloadEmailFile(emlName :string) : any{
-    console.log("i am in the download function");
-    console.log(emlName);
-    this.postService.downloadDoc(this.sharepointfilename).subscribe((data : Blob) => {
-      console.log(data)
-    })
-  }
 
-  
-
-  decodefile() : void {
-    let testing: string = btoa("life is so good !");
-    console.log(testing);
-    let decoded: string = atob(testing);
-    console.log(decoded);
-  }
-  
 
   checkDossierNumber(): void {
     if (!this.dossierNumber) {
@@ -202,15 +143,12 @@ getPostDetails(postId: string): void {
         }
       );
   }
-
-
     showConfirm() {
         if (!this.visible) {
           this.messageService.add({ key: 'confirm', sticky: true, severity: 'warn', summary: 'Are you sure?', detail: 'Confirm to proceed' , life: 10000 });
           this.visible = true;
         }
     }
-
 
     onConfirm() {
       if (this.selectedPost && this.dossierNumber) {
@@ -231,22 +169,16 @@ getPostDetails(postId: string): void {
       }
     }
 
-    
-
     showErrorViaToast(message: string): void {
       this.messageService.add({severity: 'error', summary: 'Error Message', detail: message });
     }
-
     
     onReject() {
         this.messageService.clear('confirm');
         this.visible = false;
     }
  
-  
 
-
-  
   
   getAllPostInfo(): void {
     this.postService.getPostsWithoutDossierId()
@@ -255,51 +187,6 @@ getPostDetails(postId: string): void {
         this.filteredPostInfoList = data;
       });
   }
-
-  reset() {
-    this.sc.scrollToIndex(0, 'smooth');
-  }
-  
-  onResize(event: any) {
-    const panelHeight = event.panel.size.height - 50; // Subtracting any additional margin/padding
-    this.renderer.setStyle(this.scroller.nativeElement, 'height', panelHeight + 'px');
-    this.scrollerHeight = `${panelHeight}px`; // Update scrollerHeight property
-  }
-
-
-  
-
-
-  
-/*
-  downloadDoc(fileName: string): void {
-    this.postService.downloadDoc(fileName)
-      .subscribe(response => {
-        // Handle the file download
-        this.downloadFile(response);
-      }, error => {
-        console.error('Error downloading document:', error);
-      });
-  }
-
-  private downloadFile(blob: Blob): void {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'document.zip'; // You can set the default download filename here
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  }
-
-
-
-
-
-
-*/
-
 
 
   downloadDocument(fileName: string, postId : string ): void {
@@ -350,6 +237,17 @@ getPostDetails(postId: string): void {
 
 
 
+ 
+  
+  reset() {
+    this.sc.scrollToIndex(0, 'smooth');
+  }
+  
+  onResize(event: any) {
+    const panelHeight = event.panel.size.height - 50; // Subtracting any additional margin/padding
+    this.renderer.setStyle(this.scroller.nativeElement, 'height', panelHeight + 'px');
+    this.scrollerHeight = `${panelHeight}px`; // Update scrollerHeight property
+  }
 
 
 
