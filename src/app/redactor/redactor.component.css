@@ -1,0 +1,92 @@
+.pdf-container {
+    padding: 20px;
+}
+
+.pdf-container h4 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.pdf-buttons button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.pdf-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.upload-container {
+    margin-top: 20px;
+}
+
+.upload-container button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.upload-container button:hover {
+    background-color: #218838;
+}
+
+canvas {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+
+.button-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .green-buttons {
+    margin-right: auto;
+  }
+  
+  .blue-buttons {
+    margin-left: auto;
+  }
+  
+  .green-buttons button,
+  .blue-buttons button {
+    background-color: green; /* Change to blue for the blue-buttons class */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-right: 8px; /* Adjust spacing between buttons */
+  }
+  
+  .green-buttons button:last-child,
+  .blue-buttons button:last-child {
+    margin-right: 0; /* Remove margin for the last button in each group */
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+
+
+.left-text {
+    text-align: left;
+}
+
+.right-text {
+    margin-left: auto;
+    text-align: right;
+}

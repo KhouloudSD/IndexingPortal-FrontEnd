@@ -1,0 +1,107 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h4>Post Registration</h4>
+            
+            <p-toast [life]="1000"></p-toast>
+            <div class="flex justify-content-between flex-column sm:flex-row">
+                <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clearSearch()"></button>
+                <span class="p-input-icon-left mb-2">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="keyword" (input)="search()" placeholder="Search Keyword" class="w-full"/>
+                </span>
+            </div>
+            
+            <p-splitter [style]="{'height': '510px'}" [panelSizes]="[30,60]" (onResize)="onResize($event)">
+                <ng-template pTemplate>
+                    <p-scroller #scroller [items]="filteredPostInfoList" [itemSize]="100" [scrollHeight]="scrollerHeight" styleClass="border-1 surface-border" [style]="{'height': '510px'}">
+                        <ng-template pTemplate="item" let-postInfo let-options="options">
+                            <div class="email-item" [ngClass]="{ 'surface-ground': options.odd }" (click)="selectPost(postInfo)">
+                                <div class="email-summary">
+                                    <div class="email-subject">{{ postInfo.emailSubject }}</div>
+                                    <div class="email-from">{{ postInfo.emailFrom }}</div>
+                                </div>
+                                <div class="email-date">{{ postInfo.postDate | date:'EEE h:mm a' }}</div>
+                            </div>
+                        </ng-template>
+                    </p-scroller>
+                </ng-template>
+                
+                <ng-template pTemplate>
+                    <div class="col">
+
+                        <div class="post-details">
+                            <h5>{{ selectedPost?.emailSubject }}</h5>
+                            <div *ngIf="selectedPost">
+                                <div class="email-header">
+                                    <div class="email-info">
+                                        <div class="email-field"><strong>Date:</strong> {{ postDetails?.postDate | date:'dd/MM/yyyy hh:mm a' }}</div>
+                                    </div>
+                                    <br>
+                                    <div class="status-badge">
+                                        <span *ngIf="postDetails.Status">
+                                          <span [class]="'product-badge status-' + (postDetails?.Status ? postDetails.Status.toLowerCase() : '')">
+                                            {{ postDetails.Status }}
+                                          </span>
+                                        </span>
+                                        </div>
+                                </div>
+                                <div class="email-body">
+                                            <div class="flex align-items-center gap-2">
+                                                <div><strong>Dossier Number:</strong> </div>
+                                                <span>
+                                                    <label for="dossierN" class="p-sr-only">Dossier Number</label>
+                                                    <input id="dossierN" type="text" [(ngModel)]="dossierNumber" pInputText placeholder="Dossier Number" pTooltip="Enter your dossier number">
+                                                  </span>
+                                                  <button pButton pRipple type="button" label="Link" icon="pi pi-check" (click)="checkDossierNumber()" pTooltip="Click to check dossier number"></button>
+                                            </div>
+                                            <br>
+                                    <div><strong>From:</strong> {{ postDetails?.emailFrom }}</div>
+                                    <div><strong>To:</strong> {{ postDetails?.emailTo }}</div>
+                                    <div><strong>Cc:</strong> {{ postDetails?.emailCc }}</div>
+                                    <div><strong>Has Attachments:</strong> {{ postDetails?.hasAttachments }}</div>
+                                    <div><strong>Comments:</strong> {{ postDetails?.comments }}</div>
+                                    <div><strong>Reference:</strong> {{ postDetails?.postReference }}</div>
+                                    <div><strong>Attachments:</strong>
+                                        <li *ngFor="let attachment of postDetails?.attachments">
+                                            {{ attachment.substring(37) }}
+                                            <i *ngIf="verifyEmailName(attachment) || postDetails.id"> 
+                                            <p-button icon="pi pi-download" [rounded]="true" [text]="true" [raised]="true" severity="success " (click)="downloadDocument(attachment, postDetails.id)"></p-button>
+                                        </i>
+                                          </li>
+
+                                    </div>
+                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-splitter>
+        </div>
+    </div>
+</div>
+
+    <p-toast position="bottom-center" key="confirm" (onClose)="onReject()" [baseZIndex]="5000">
+        
+        <ng-template let-message pTemplate="message">
+            <div class="flex flex-column" style="flex: 1">
+                <div class="text-center">
+                    <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                    <h4>{{message.summary}}</h4>
+                    <p>{{message.detail}}</p>
+                    
+                </div>
+                <div class="grid p-fluid">
+                    <div class="col-6">
+                        <button type="button" pButton pRipple (click)="onConfirm()" label="Yes" class="p-button-success"></button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" pButton (click)="onReject()" label="No" class="p-button-secondary"></button>
+                    </div>
+
+
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>

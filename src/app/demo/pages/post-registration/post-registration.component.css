@@ -1,0 +1,71 @@
+.product-badge,
+.order-badge {
+  border-radius: var(--border-radius);
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.product-badge.status-new {
+  background: #C8E6C9;
+  color: #256029;
+}
+
+.product-badge.status-closed {
+    background: #C8E6C9;
+    color: #f20e0e;
+  }
+  
+
+
+.post-details {
+    padding: 10px;
+    overflow: auto;
+    height: calc(100% - 20px);
+    width: calc(100% - 20px);
+}
+
+.email-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.email-summary {
+    flex: 1;
+}
+
+
+.email-date {
+    font-size: smaller;
+}
+
+.post-details {
+    padding: 10px;
+    overflow: auto;
+    height: calc(100% - 20px);
+    width: calc(100% - 20px);
+}
+
+.email-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.email-info {
+    display: flex;
+}
+
+.email-field {
+    margin-right: 20px;
+}
+
+.email-body {
+    line-height: 1.6;
+}

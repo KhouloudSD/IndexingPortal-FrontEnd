@@ -1,0 +1,50 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h4>Posts Table</h4>
+
+            <div class="card px-6 py-6">
+                <p-toolbar styleClass="mb-4">
+                    <ng-template pTemplate="left">
+                        <div class="my-2">
+                            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="right">
+                        <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    </ng-template>
+                </p-toolbar>
+            </div>
+            <p-dialog [(visible)]="postDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+                <ng-template pTemplate="content">
+                    <div class="field">
+                        <label for="emailSubject">Email Subject</label>
+                        <input type="text" pInputText id="emailSubject" [(ngModel)]="post.EmailSubject" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !post.EmailSubject}" />
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !post.EmailSubject">Email Subject is required.</small>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="status">Inventory Status</label>
+                        <p-dropdown [(ngModel)]="post.inventoryStatus" inputId="inventoryStatus" optionValue="value" [options]="statuses" placeholder="Select">
+                            <ng-template pTemplate="selectedItem">
+                                <span *ngIf="post && post.inventoryStatus" [class]="'product-badge status-' + post.inventoryStatus.toLowerCase()">{{post.inventoryStatus}}</span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+
+                    
+
+                    
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                </ng-template>
+            </p-dialog>
+
+        </div>
+    

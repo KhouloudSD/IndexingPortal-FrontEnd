@@ -1,0 +1,4 @@
+<dropzone  [dropzone]="DEFAULT_DROPZONE_CONFIG"  [message]="'Click or drag images here to upload'" class="dropzone" 
+(success)="fileUploadSuccess($event)"   (removedFile)="removeFile($event)"  (error)="fileUploadError($event)" [message]="message">
+</dropzone>
+

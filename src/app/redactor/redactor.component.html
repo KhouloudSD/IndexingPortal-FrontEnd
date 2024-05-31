@@ -1,0 +1,57 @@
+<div class="grid">
+  <div class="col-12">
+      <div class="card">
+          <h4>PDF File Redactor</h4>
+<div [style.min-height]="'10px'">
+  
+  <div style="text-align: center;">
+    <button id="download-image" (click)="downloadFile()"
+              [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'" [disabled]="show && __TOTAL_PAGES!=allPages.length">Download PDF
+     </button>
+  </div>
+
+</div>
+<div style="text-align: center;">
+  <button id="upload-button" (click)="uploadFile()" [style.display]="'none'">Select PDF</button>
+  <app-drop-zone (fileEvent)="captureFile($event)" (removeFileEvent)="removeFile($event)" ></app-drop-zone>
+</div>
+
+
+<div class="pdf-buttons" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
+  <br> <br>
+  <div class="button-group green-buttons">
+    <div class="left-text">
+    <button id="pdf-prev" (click)="prevPage()"><i class="pi pi-arrow-circle-right"></i></button>
+    <button id="pdf-next" (click)="nextPage()"><i class="pi pi-arrow-circle-left"></i></button>
+    </div>
+    <div class="right-text">
+    <button id="pdf-undo" (click)="undoAction()"> Undo</button>
+    <button id="pdf-redo" (click)="redoAction()"> Redo </button>
+    </div>
+  </div>
+  <br>
+  <div id="page-count-container">
+    <div id="pdf-current-page">Page {{__CURRENT_PAGE}} of {{__TOTAL_PAGES}}</div>
+  </div>
+
+</div>
+
+
+
+
+<div id="pdf-main-container" (mousedown)="mouse.event($event)"
+     (mouseup)="mouse.event($event)" (mousemove)="mouse.event($event)">
+  <div id="pdf-contents">
+    <div id="pdf-loader" [style.display]="show && __TOTAL_PAGES!=allPages.length?'block':'none'">Loading document ...</div>
+    <div id="pdf-meta">
+    </div>
+    <div id="canvas-container" [style.display]="show && __TOTAL_PAGES==allPages.length?'block':'none'">
+      <canvas #myCanvas style="width: 1000px;">
+      </canvas></div>
+  </div>
+</div></div></div></div>    
+
+
+
+
+
