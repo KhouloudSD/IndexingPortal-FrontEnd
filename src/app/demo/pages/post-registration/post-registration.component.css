@@ -1,3 +1,4 @@
+
 .product-badge,
 .order-badge {
   border-radius: var(--border-radius);
@@ -7,7 +8,6 @@
   font-size: 12px;
   letter-spacing: 0.3px;
 }
-
 .product-badge.status-new {
   background: #C8E6C9;
   color: #256029;

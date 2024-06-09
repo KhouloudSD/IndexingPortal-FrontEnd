@@ -19,7 +19,7 @@ export class PostRegistrationComponent implements OnInit {
   @ViewChild('splitter') splitter!: Splitter;
   @ViewChild('scroller') scroller!: ElementRef;
   dossierNumber: string = '';
-  scrollerHeight: string = '510px'; // Define scrollerHeight property
+  scrollerHeight: string = '700px'; // Define scrollerHeight property
   postInfoList: PostInfoDto[] = [];
   keyword: string = '';
   filteredPostInfoList: PostInfoDto[] = [];
@@ -30,6 +30,14 @@ export class PostRegistrationComponent implements OnInit {
   visible: boolean = false;
   msgs: Message[] = [];
   emailSubject: string = '';
+  selectedAttachment : string ='';
+
+  
+  submitted : boolean = false;
+  postDialog : boolean = false;
+  fileContent: string = ''; // Property to hold the file content
+
+
 
 
 
@@ -55,6 +63,54 @@ export class PostRegistrationComponent implements OnInit {
       return post.emailSubject.toLowerCase().includes(this.keyword.toLowerCase()) ||
              post.emailFrom.toLowerCase().includes(this.keyword.toLowerCase());
     });
+  }
+  displayFileContent(content: Blob): void {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target != null) {
+        this.fileContent = event.target.result as string;
+      } else {
+        this.fileContent = '';
+      }
+    };
+    reader.readAsText(content);
+  }
+
+  isPDF(filename: string): boolean {
+    const index = filename.indexOf(".");
+    if (index === -1) {
+        return false;
+    }
+    const extension = filename.substring(index + 1);
+    return extension.toLowerCase() === "pdf";
+  }
+  
+  isTXT(filename: string): boolean {
+    const index = filename.indexOf(".");
+    if (index === -1) {
+        return false;
+    }
+    const extension = filename.substring(index + 1);
+    return extension.toLowerCase() === "txt";
+  }
+
+  downloadDocument1(fileName: string, postId: string): void {
+    let Name: string = postId + "__" + fileName.substring(37);
+    console.log(Name);
+    this.selectedAttachment = Name;
+
+    
+    this.postDialog = true; // Make the p-dialog visible
+    this.postService.downloadDoc(Name).subscribe(
+      response => {
+        const content = this.base64toBlob(response, 'application/octet-stream');
+
+        this.displayFileContent(content);
+      },
+      error => {
+        console.error('Error downloading document:', error);
+      }
+    );
   }
 
   selectPost(post: PostInfoDto): any {
@@ -130,6 +186,7 @@ getPostDetails(postId: string): void {
     this.postService.checkDossierNumberExists(this.dossierNumber)
       .subscribe(
         response => {
+          console.log(response)
           if (response === "00000000-0000-0000-0000-000000000000") {
             console.log('Dossier number does not exist');
             this.showErrorViaToast('Dossier number does not exist');
@@ -184,9 +241,14 @@ getPostDetails(postId: string): void {
     this.postService.getPostsWithoutDossierId()
       .subscribe((data: PostInfoDto[]) => {
         this.postInfoList = data;
-        this.filteredPostInfoList = data;
+        this.filteredPostInfoList = this.postInfoList;
       });
   }
+    hideDialog() {
+      this.postDialog = false;
+      this.submitted = false;
+      this.fileContent ="";
+    }
 
 
   downloadDocument(fileName: string, postId : string ): void {

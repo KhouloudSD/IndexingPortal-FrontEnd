@@ -12,9 +12,9 @@
                 </span>
             </div>
             
-            <p-splitter [style]="{'height': '510px'}" [panelSizes]="[30,60]" (onResize)="onResize($event)">
+            <p-splitter [style]="{'height': '700px'}" [panelSizes]="[30,60]" (onResize)="onResize($event)">
                 <ng-template pTemplate>
-                    <p-scroller #scroller [items]="filteredPostInfoList" [itemSize]="100" [scrollHeight]="scrollerHeight" styleClass="border-1 surface-border" [style]="{'height': '510px'}">
+                    <p-scroller #scroller [items]="filteredPostInfoList" [itemSize]="100" [scrollHeight]="scrollerHeight" styleClass="border-1 surface-border" [style]="{'height': '700px'}">
                         <ng-template pTemplate="item" let-postInfo let-options="options">
                             <div class="email-item" [ngClass]="{ 'surface-ground': options.odd }" (click)="selectPost(postInfo)">
                                 <div class="email-summary">
@@ -44,7 +44,7 @@
                                             {{ postDetails.Status }}
                                           </span>
                                         </span>
-                                        </div>
+                                    </div>
                                 </div>
                                 <div class="email-body">
                                             <div class="flex align-items-center gap-2">
@@ -61,12 +61,15 @@
                                     <div><strong>Cc:</strong> {{ postDetails.emailCc }}</div>
                                     <div><strong>Has Attachments:</strong> {{ postDetails.hasAttachments }}</div>
                                     <div><strong>Comments:</strong> {{ postDetails.comments }}</div>
+                                    <div><strong>Email Message:</strong> {{ postDetails.emailMessage }}</div>
+
                                     <div><strong>Reference:</strong> {{ postDetails.postReference }}</div>
                                     <div><strong>Attachments:</strong>
                                         <li *ngFor="let attachment of postDetails.attachments">
                                             {{ attachment.substring(37) }}
                                             <i *ngIf="verifyEmailName(attachment) || postDetails.id"> 
                                             <p-button icon="pi pi-download" [rounded]="true" [text]="true" [raised]="true" severity="success " (click)="downloadDocument(attachment, postDetails.id)"></p-button>
+                                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="downloadDocument1(attachment, postDetails.id)"></p-button>
                                         </i>
                                           </li>
 
@@ -99,9 +102,26 @@
                     <div class="col-6">
                         <button type="button" pButton (click)="onReject()" label="No" class="p-button-secondary"></button>
                     </div>
-
-
                 </div>
             </div>
         </ng-template>
     </p-toast>
+  
+       
+
+<p-dialog [(visible)]="postDialog" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [closable]="false" [style]="{ width: '50vw' }"  [draggable]="false"  [resizable]="false" class="p-fluid">
+    <ng-template pTemplate="content">
+        <h3>{{ selectedAttachment.substring(37) }}</h3>
+
+        <div *ngIf="fileContent  && isTXT(selectedAttachment)" >
+            <p>{{ fileContent }}</p>
+        </div>
+        <!-- Pass selectedAttachment to app-redactor component -->
+        <app-redactor *ngIf="isPDF(selectedAttachment)"  [selectedAttachment]="selectedAttachment"></app-redactor>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    </ng-template>
+</p-dialog>
+
+

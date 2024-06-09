@@ -7,6 +7,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { PostsComponent } from './posts/posts.component';
 import { DropZoneComponent } from 'src/app/demo/pages/redaction/drop-zone/drop-zone.component';
 import { RedactorComponent } from './redaction/redactor.component';
+import { PostAttachmentsComponent } from 'src/app/demo/pages/posts/post-attachments/post-attachments.component';
+import { PostDetailsComponent } from './posts/post-details/post-details.component';
 
 
 export const PagesLayoutRoutes: Routes = [
@@ -19,8 +21,12 @@ export const PagesLayoutRoutes: Routes = [
     { path: 'login',          
       component: LoginComponent ,
     },
-    { path: 'posts',      
-    component: PostsComponent
+    {  path: 'posts', component: PostsComponent, children: [
+					{ path: '', redirectTo: 'PostDetails', pathMatch: 'full' },
+					{ path: 'PostAttachemnts/:id', component: PostAttachmentsComponent },
+					{ path: 'PostDetails/:id', component: PostDetailsComponent },
+				]
+		
   },
   { path: 'redaction',      
   component: RedactorComponent

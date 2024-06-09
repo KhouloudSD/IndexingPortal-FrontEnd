@@ -1,0 +1,28 @@
+.customer-badge {
+  border-radius: var(--border-radius);
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+
+.customer-badge.status-NEW {
+    background: #B3E5FC;
+    color: #23547B;
+  }
+
+  .customer-badge.status-CLOSED {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  .customer-badge.status-true {
+    background: #FEEDAF;
+    color: #8A5340;
+  }
+  .customer-badge.status-false {
+    background: #ECCFFF;
+    color: #694382;
+  }

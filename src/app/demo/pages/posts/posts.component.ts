@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { Post } from '../../data/post';
+import { Post, PostDto } from '../../data/post';
 import { PostService } from '../../services/posts.service';
+import { forkJoin } from 'rxjs';
+import { PagedList } from '../../data/SPDocument';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MenuItem } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Status {
   label: string;
@@ -16,49 +19,104 @@ interface Status {
   styleUrls: ['./posts.component.css'],
 })
 
-
-
 export class PostsComponent  implements OnInit{
+
   post : Post  = {};
-  posts : Post[] = [];
+  posts : PostDto[] = [];
+  selectedPostID!: string;
+  selectedPost!: PostDto
   submitted : boolean = false;
   postDialog : boolean = false;
   statuses: any[] = [];
-  cols : any[] = []
+  cols : any[] = [];
+  postDetails !: PostDto ;
+  page =1;
+  pageSize =12;
+  totalCount =0;
+  hasNextPage! : boolean ;
+  hasPreviousPage!: boolean;
+  routeItems: MenuItem[] = [];
+  loading: boolean = false;  
 
-  
-  constructor(private postService: PostService) { }
+  constructor(private postService: PostService, private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.posts = []
-
-        this.cols = [
-            { field: 'PostId', header: 'PostId' },
-            { field: 'EmailSubject', header: 'EmailSubject' },
-            { field: 'Dossier_Id', header: 'Dossier_Id' },
-            { field: 'HasAttachments', header: 'HasAttachments' },
-            { field: 'Status', header: 'Status' }
-        ];
-
+        this.loadPosts(1);
+        console.log(this.postDialog)
         this.statuses = [
             { label: 'NEW', value: 'new' },
             { label: 'CLOSED', value: 'closed' },
         ];
     }
+  
+    initializeRouteItems() {
+        this.routeItems = [
+          { label: 'Informations', routerLink: ['PostDetails', this.selectedPostID] },
+          { label: 'Documents', routerLink: ['PostAttachemnts', this.selectedPostID] }
+        ];
+    }
 
-  openNew() {
-    this.post = {};
-    this.submitted = false;
-    this.postDialog = true;
+    hideDialog() {
+      this.postDialog = false;
+      this.submitted = false;
+      this.selectedPostID = "";
+      this.router.navigate([`/pages/posts`])
+    }
+
+    onRowSelect(event: any) {
+      this.selectedPostID = event.data.id;
+      if (this.selectedPostID) {
+        this.initializeRouteItems();
+        this.router.navigate([`/pages/posts/PostDetails/${this.selectedPostID}`]);
+        this.postDialog = true;
+      }
+    }
+    
+
+    
+
+
+
+
+    loadPosts(pageNumber: number): void {
+      this.loading = true;  
+      this.postService.getAllPosts1(pageNumber, this.pageSize)
+        .subscribe((response: PagedList<PostDto>) => {
+          this.posts = response.items;
+          const statusObservables = this.posts.map(post => this.postService.getStatusCodeByPostId(post.id));
+          forkJoin(statusObservables).subscribe(
+            (statuses: any[]) => {
+              this.posts.forEach((post, index) => {
+                var statusCode = statuses[index];
+                if (statusCode !== "CLOSED" && statusCode !== "NEW") { statusCode = "CLOSED"; }
+                post.Status = statusCode;
+                post.postDate = new Date(post.postDate);
+              });
+              this.loading = false;  
+            },
+            (error: any) => {
+              console.error('Error fetching status codes:', error);
+              this.loading = false;  
+            }
+          );
+          this.totalCount = response.totalCount;
+        },
+        error => {
+          console.error('Error fetching posts:', error);
+          this.loading = false;  
+        });
+    }
+  
+    onPageChange(event: any): void {
+      console.log(event.page);
+      this.loadPosts(event.page + 1);
+    }
+  
+  
+
+   
 }
-  hideDialog() {
-    this.postDialog = false;
-    this.submitted = false;
 
-}
-
-
-}
 
 
 
@@ -73,38 +131,15 @@ export class PostsComponent  implements OnInit{
 
 
 /*
-
- [POST_Id]
-      ,[POST_TimeStamp]
-      ,[POST_PostNumber]   this 
-      ,[POST_PostDate]    this 
-      ,[POST_PostReference]   this
-      ,[POST_EmailFrom]   this 
-      ,[POST_EmailTo]   this 
-      ,[POST_EmailCC]    this
-      ,[POST_EmailSubject]   this 
-      ,[POST_EmailMessage]  this
-      ,[POST_SendDate]   this
-      ,[POST_ReceiveDate]  this
-      ,[POST_Comments]
-      ,[POST_CommunicationType_Id]
-      ,[POST_PostHandlingPriority_Id]
-      ,[POST_IndexingDate]
-      ,[POST_IndexingArchive_Id]
-      ,[POST_LegalEntity_Id]
-      ,[POST_Department_Id]
-      ,[POST_Employee_Id]
-      ,[POST_Dossier_Id]   this 
-      ,[POST_DossierAssignment_Id]
-      ,[POST_DossierParty_Id]
-      ,[POST_OriginalDocument_Id]
-      ,[POST_IsBodilyInjury]
-      ,[POST_CreatedDate]
-      ,[POST_CreatedBy]
-      ,[POST_LastModifiedDate]
-      ,[POST_LastModifiedBy]
-      ,[POST_Inactive]
-      ,[POST_HasAttachments]  this 
-
-
-*/
+<div class="field">
+                        <label for="status">Status</label>
+                        <p-dropdown [(ngModel)]="post.Status" inputId="Status" optionValue="value" [options]="statuses" placeholder="Select">
+                            <ng-template pTemplate="selectedItem">
+                                <span *ngIf="post && post.Status" [class]="'product-badge status-' + post.Status.toLowerCase()">{{post.Status}}</span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+                    */

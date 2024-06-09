@@ -15,6 +15,10 @@ export interface Post {
     Status?: string;
 }
 
+
+
+
+
 export interface PostInfoDto {
     id: string;
     emailSubject: string;

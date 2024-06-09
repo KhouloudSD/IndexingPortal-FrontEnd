@@ -1,0 +1,96 @@
+<div class="container" *ngIf="selectedPost || dossierDetails">
+    <div class="card flex justify-content-center" *ngIf="selectedPost">
+      <div class="field p-fluid post-details-section">
+        <h5>Post Details</h5>
+        <small>Email From</small>
+        <br>
+        <small><b>{{selectedPost.emailFrom}}</b></small>
+        <br><br>
+        <small>Email To</small>
+        <br>
+        <small><b>{{selectedPost.emailTo}}</b></small>
+        <br>
+        <div *ngIf="selectedPost.emailCc">
+          <small>Email cc</small>
+          <br>
+          <small><b>{{selectedPost.emailCc}}</b></small>
+          <br>
+        </div>
+        <br>
+        <small>Email Subject</small>
+        <br>
+        <small><b>{{selectedPost.emailSubject}}</b></small>
+        <br><br>
+        <div *ngIf="selectedPost.comments">
+          <small>Comments</small>
+          <br>
+          <small><b>{{selectedPost.comments}}</b></small>
+          <br>
+        </div>
+        <small>Status</small>
+        <br>
+        <small><b>{{selectedPost.Status}}</b></small>
+        <br><br>
+        <small>Created Date</small>
+        <br>
+        <small><b>{{selectedPost.postDate}}</b></small>
+        <br>
+        <div *ngIf="selectedPost.postReference">
+          <small>Reference</small>
+          <br>
+          <small><b>{{selectedPost.postReference}}</b></small>
+          <br>
+        </div>
+        <br>
+        <div *ngIf="selectedPost.hasAttachments">
+          <small>has Attachments</small>
+          <br>
+          <small><b>{{selectedPost.hasAttachments}}</b></small>
+          <br>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card flex justify-content-center" *ngIf="dossierDetails">
+      <div class="field p-fluid post-details-section">
+        <h5>Dossier Details</h5>
+        <div *ngIf="dossierDetails.number">
+          <small>Dossier Number</small>
+          <br>
+          <small><b>{{dossierDetails.number}}</b></small>
+          <br><br>
+        </div>
+        <div *ngIf="dossierDetails.currentStatusCode">
+          <small>Status</small>
+          <br>
+          <small><b>{{dossierDetails.currentStatusCode}}</b></small>
+          <br><br>
+        </div>
+        <div *ngIf="dossierDetails.createdDate">
+          <small>Creation Date</small>
+          <br>
+          <small><b>{{dossierDetails.createdDate | date: 'short'}}</b></small>
+          <br><br>
+        </div>
+        <div *ngIf="dossierDetails.createdBy">
+          <small>Created By</small>
+          <br>
+          <small><b>{{dossierDetails.createdBy}}</b></small>
+          <br><br>
+        </div>
+        <div *ngIf="dossierDetails.lastModifiedDate">
+          <small>Last Modified Date</small>
+          <br>
+          <small><b>{{dossierDetails.lastModifiedDate | date: 'short'}}</b></small>
+          <br><br>
+        </div>
+        <div *ngIf="dossierDetails.lastModifiedBy">
+          <small>Last Modified By</small>
+          <br>
+          <small><b>{{dossierDetails.lastModifiedBy}}</b></small>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+  

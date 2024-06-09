@@ -27,10 +27,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { PostService } from '../services/posts.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { MessagesModule } from 'primeng/messages';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService , MessageService } from 'primeng/api';
 import { DropZoneComponent } from 'src/app/demo/pages/redaction/drop-zone/drop-zone.component';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { RedactorComponent } from './redaction/redactor.component';
+import { TagModule } from 'primeng/tag';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { PostAttachmentsComponent } from './posts/post-attachments/post-attachments.component';
+import { PostDetailsComponent } from './posts/post-details/post-details.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -40,10 +45,15 @@ import { RedactorComponent } from './redaction/redactor.component';
     PagesComponent,
     RedactorComponent,
     DropZoneComponent,
+    PostAttachmentsComponent,
+    PostDetailsComponent,
   ],
-  providers: [PostService, MessageService],
+  providers: [PostService, MessageService, ConfirmationService],
 
   imports: [
+    ConfirmDialogModule,
+    TabMenuModule,
+    TagModule,
     DropzoneModule,
     CommonModule,
     PaginatorModule,

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef , NgZone, OnInit} from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef , NgZone, OnInit, Input} from '@angular/core';
 import * as PDFJS from 'src/app/demo/pages/redaction/pdf.js';
 
 import {jsPDF} from 'jspdf';
@@ -11,6 +11,8 @@ import { filter } from 'rxjs';
   styleUrls: ['./redactor.component.css']
 })
 export class RedactorComponent implements AfterViewInit , OnInit{
+
+  @Input() selectedAttachment: string | null = null;
 
   @ViewChild('myCanvas') __CANVAS!: ElementRef;
   public __CANVAS_CTX!: CanvasRenderingContext2D ;
