@@ -1,4 +1,19 @@
 
+
+
+<div class="card flex justify-content-center">
+    <p-toast></p-toast>
+    <p-fileUpload name="demo[]" (onSelect)="onFileSelect($event)" [multiple]="false"  [maxFileSize]="1000000">
+      <ng-template pTemplate="content">
+        <ul *ngIf="selectedFile">
+          <li>{{ selectedFile.name }} - {{ selectedFile.size }} bytes</li>
+        </ul>
+      </ng-template>
+    </p-fileUpload>
+  </div>
+  
+  
+  
   
   <p-table [value]="documents" [paginator]="true" [rows]="10" [responsive]="true"  [loading]="loading">
     <ng-template pTemplate="header">

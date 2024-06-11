@@ -1,4 +1,3 @@
-import { PostDto } from "./post";
 
 export class SPDocument {
     Id: string;
@@ -11,6 +10,9 @@ export class SPDocument {
     FileDescription: string;
     Url: string;
     Extension: string;
+    Size: string;
+    SizeBytes: string;
+    Content: string;
   
     constructor(
       Id: string,
@@ -22,7 +24,10 @@ export class SPDocument {
       CreatedDate: string,
       FileDescription: string,
       Url: string,
-      Extension: string
+      Extension: string,
+      Size: string,
+      SizeBytes: string,
+      Content: string
     ) {
       this.Id = Id;
       this.DocumentName = DocumentName;
@@ -34,6 +39,9 @@ export class SPDocument {
       this.FileDescription = FileDescription;
       this.Url = Url;
       this.Extension = Extension;
+      this.Size = Size;
+      this.SizeBytes = SizeBytes;
+      this.Content = Content;
     }
   }
   

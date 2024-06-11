@@ -41,6 +41,7 @@ export class PostsComponent  implements OnInit{
   constructor(private postService: PostService, private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
+      console.log("ngonposts")
         this.loadPosts(1);
         console.log(this.postDialog)
         this.statuses = [
@@ -79,6 +80,7 @@ export class PostsComponent  implements OnInit{
 
 
     loadPosts(pageNumber: number): void {
+      console.log("hello hello")
       this.loading = true;  
       this.postService.getAllPosts1(pageNumber, this.pageSize)
         .subscribe((response: PagedList<PostDto>) => {

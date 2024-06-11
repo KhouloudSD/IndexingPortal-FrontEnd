@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {  Post, PostDto, PostInfoDto } from '../data/post';
 import { environment } from 'src/environments/environment';
@@ -41,6 +41,19 @@ export class PostService {
           catchError(this.handleError)
         );
     }
+    uploadDocument(spDocument: SPDocument , PostId :string): Observable<any> {
+      const url = `${this.apiServeurUrl}/Document/Upload/${PostId}`;
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      };
+  
+      return this.http.put<any>(url, spDocument, httpOptions)
+        .pipe(
+          catchError(this.handleError)
+        );
+    }
 
 
 
@@ -75,6 +88,7 @@ export class PostService {
       return throwError(error); // Let the caller handle the error
     }
     
+  
 
       getPostDetails(postId: string): Observable<PostDto> {
         const url = `${this.apiServeurUrl}/Posts/${postId}`;
@@ -132,6 +146,7 @@ export class PostService {
         });
       }
     
+      
       
     
       
